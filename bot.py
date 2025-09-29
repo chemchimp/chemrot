@@ -14,5 +14,12 @@ api = tweepy.API(auth)
 
 # Read tweets from tweets.txt
 with open("tweets.txt", "r") as f:
-    tweets = [line.strip() for line in f if]()
+    tweets = [line.strip() for line in f if line.strip()]
 
+# Pick one tweet at random
+tweet = random.choice(tweets)
+
+# Post the tweet
+api.update_status(tweet)
+
+print(f"Tweet posted: {tweet}")
