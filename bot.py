@@ -8,20 +8,25 @@ api_secret = os.getenv("API_KEY_SECRET")
 access_token = os.getenv("ACCESS_TOKEN")
 access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
 
-# Debugging: verify the secrets are loaded (REMOVE before public push!)
-# print(api_key, api_secret, access_token, access_token_secret)
+# Initialize Tweepy client for v2
+client = tweepy.Client(
+    consumer_key=api_key,
+    consumer_secret=api_secret,
+    access_token=access_token,
+    access_token_secret=access_token_secret
+)
 
-# Authenticate with X (formerly Twitter)
-auth = tweepy.OAuth1UserHandler(api_key, api_secret, access_token, access_token_secret)
-api = tweepy.API(auth)
-
-# Read tweets from tweets.txt in root directory
+# Read tweets from tweets.txt
 with open("tweets.txt", "r") as f:
     tweets = [line.strip() for line in f if line.strip()]
 
 # Pick one tweet at random
-tweet = random.choice(tweets)
+tweet_text = random.choice(tweets)
 
 # Post the tweet
-api.update_status(tweet)
-print(f"Tweet posted: {tweet}")
+response = client.create_tweet(text=tweet_text)
+
+if response.data:
+    print(f"Tweet posted! ID: {response.data['id']}")
+else:
+    print("Failed to post tweet:", response)
